@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Biography List</h1>
+
+{% for biography in biographies %}
+  <a href="{% url 'detail' biography.id %}">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ biography.name }}</span>
+        <p>Title: {{ biography.title }}</p>
+        <p>Author: {{ biography.author|linebreaks }}</p>
+        <p>Status: {{ biography.status }}</p>
+       
+      </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}
