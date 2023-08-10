@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Biography
+from django.views.generic import ListView, DetailView
+from .models import Biography, Version
 from .forms import StatusForm
 
 # Create your views here.
@@ -18,10 +19,18 @@ def biographies_index(request):
 
 def biographies_detail(request, biography_id):
   biography = Biography.objects.get(id=biography_id)
+  # Get the versions the biography doesn't have
+  # First, create a list of the version ids that the biography DOES have
+  id_list = biography.versions.all().values_list('id')
+  # Now we can query for versions whose ids are not in the list using exclude
+  versions_biography_doesnt_have = Version.objects.exclude(id__in=id_list)
   status_form = StatusForm()
   return render(request, 'biographies/detail.html', {
-    'biography': biography, 'status_form': status_form
+    'biography': biography, 'status_form': status_form,
+    # Add the versions to be displayed
+    'versions': versions_biography_doesnt_have
   })
+
 
 class BiographyCreate(CreateView):
   model = Biography
@@ -49,3 +58,29 @@ def add_status(request, biography_id):
     new_status.biography_id = biography_id
     new_status.save()
   return redirect('detail', biography_id=biography_id) 
+
+class VersionList(ListView):
+  model = Version
+
+class VersionDetail(DetailView):
+  model = Version
+
+class VersionCreate(CreateView):
+  model = Version
+  fields = '__all__'
+
+class VersionUpdate(UpdateView):
+  model = Version
+  fields = ['name', 'color']
+
+class VersionDelete(DeleteView):
+  model = Version
+  success_url = '/Versions'
+
+def assoc_version(request, biography_id, version_id):
+  Biography.objects.get(id=biography_id).versions.add(version_id)
+  return redirect('detail', biography_id=biography_id)
+
+def unassoc_version(request, biography_id, version_id):
+  Biography.objects.get(id=biography_id).versions.remove(version_id)
+  return redirect('detail', biography_id=biography_id)

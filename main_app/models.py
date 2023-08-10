@@ -8,11 +8,23 @@ STATUS = (
   ('F', 'Finished')
 )
 
+class Version(models.Model):
+  name = models.CharField(max_length=50)
+  color = models.CharField(max_length=20)
+
+  def __str__ (self):
+    return self.name
+  
+  def get_absolute_url(self):
+    return reverse('versions_detail', kwargs={'pk': self.id})
+
 # Create your models here.
 class Biography(models.Model):
   name = models.CharField(max_length=100)
   title = models.CharField(max_length=100)
   author = models.TextField(max_length=250)
+  # Add the M:M relationship
+  versions = models.ManyToManyField(Version)
 
 
   # Changing this instance method

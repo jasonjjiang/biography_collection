@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Version List</h1>
+{% for version in version_list %}
+  <a href="{% url 'versions_detail' version.id %}">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ version.name }}</span>
+        </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}
