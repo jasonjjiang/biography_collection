@@ -1,6 +1,9 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
+# Import the User
+from django.contrib.auth.models import User
+
 
 STATUS = (
   ('S', 'Started'),
@@ -25,6 +28,8 @@ class Biography(models.Model):
   author = models.TextField(max_length=250)
   # Add the M:M relationship
   versions = models.ManyToManyField(Version)
+  # Add the foreign key linking to a user instance
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
   # Changing this instance method

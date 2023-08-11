@@ -17,4 +17,5 @@ urlpatterns = [
   path('versions/create/', views.VersionCreate.as_view(), name='versions_create'),
   path('versions/<int:pk>/update/', views.VersionUpdate.as_view(), name='versions_update'),
   path('versions/<int:pk>/delete/', views.VersionDelete.as_view(), name='versions_delete'),
+  path('accounts/signup/', views.signup, name='signup'),
 ]
